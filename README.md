@@ -1,10 +1,12 @@
-# Vi Coding Assignment 
+# Vi Coding Assignment
 
-__Writing what this project does...__
+A web server that answers questions regarding Marvel movies and actors.
 
 ## Tools
+
 - Jest for testing
-- __List additional tools you used...__
+- Express as a web framework
+- Axios for outgoing http requests
 
 ## Getting Started
 
@@ -26,4 +28,22 @@ npm test
 
 ### How to use
 
-__Describe how to use the project: starting the server, using endpoints, etc.__
+In order to start the server:
+
+```shell
+npm start
+```
+
+- The server will listen by default to port 3000, but you can provide a custom port by modifiying the `process.env.PORT` variable.
+
+Once the server is up and running, you can ask it some questions by using the following enpoints:
+
+1. **[GET] /moviesPerActor**
+
+- Which Marvel movies did each actor play in?
+- Response in the form: `{ actorName: [movie names]}`
+
+2. **[GET] /actorsWithMultipleCharacters**
+
+- Actors who played more than one Marvel character?
+- Response in the form: `{ actorName: { movieName: characterName }}`
