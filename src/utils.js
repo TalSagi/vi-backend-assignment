@@ -3,7 +3,7 @@
 function uniqueMovieCharactersOfActor(movieCharactersOfActor) {
     const actor = Object.keys(movieCharactersOfActor)[0];
     const movieCharacters = movieCharactersOfActor[actor];
-    const uniqueMovieCharacters = Object.keys(movieCharacters).reduce((acc, movie) => Object.values(acc).includes(movieCharacters[movie]) ?
+    const uniqueMovieCharacters = Object.keys(movieCharacters).reduce((acc, movie) => Object.values(acc).some(movieCharacter => essentiallyTheSameCharacter(movieCharacter, movieCharacters[movie])) ?
         acc : {...acc, [movie]: movieCharacters[movie]}, {})
 
     return {[actor]: uniqueMovieCharacters};
