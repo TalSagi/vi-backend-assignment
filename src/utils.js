@@ -9,6 +9,27 @@ function uniqueMovieCharactersOfActor(movieCharactersOfActor) {
     return {[actor]: uniqueMovieCharacters};
 }
 
+function essentiallyTheSameCharacter(characterA, characterB) {
+    const nestedCharactersA = getNestedCharacters(characterA);
+    const nestedCharactersB = getNestedCharacters(characterB);
+
+    return nestedCharactersA.some(nestedCharacterA =>
+        nestedCharactersB.some(nestedCharacterB => nestedCharacterA.includes(nestedCharacterB) ||
+        nestedCharacterB.includes(nestedCharacterA)));
+}
+
+// Input: "James 'Rhodey' Rhodes / War Machine (uncredited)"
+// Outputs: ["James Rhodey Rhodes", "War Machine"]
+function getNestedCharacters(character) {
+    // Normalize both "Virginia 'Pepper' Potts" and "Virginia \"Pepper\" Potts" to be the "Virginia Pepper Potts"
+    // Remove any "(uncredited)" or similar notes
+    character = character.replace(/[\\"']|\(.*\)/g, "").trim();
+
+    return character.split(" / ");
+}
+
 module.exports = {
-    uniqueMovieCharactersOfActor
+    uniqueMovieCharactersOfActor,
+    essentiallyTheSameCharacter,
+    getNestedCharacters
 }
