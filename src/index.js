@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const express = require('express');
 const { API_KEY } = require('./constants');
 const { movies, actors } = require('../dataForQuestions');
+const { uniqueMovieCharactersOfActor } = require('./utils')
 
 const port = Number(process.env.PORT) || 3000;
 const app = express();
@@ -19,8 +20,11 @@ async function moviesPerActor() {
 
 async function actorsWithMultipleCharacters() {
     const arrayedResult = await Promise.all(actors.map(movieCharactersOfActorByName));
+    const arrayedUnique = arrayedResult.map(uniqueMovieCharactersOfActor);
+    const arrayedActorsWithMultipleCharacters = arrayedUnique.filter(movieCharactersOfActor => !!movieCharactersOfActor &&
+        Object.keys(Object.values(movieCharactersOfActor)[0]).length > 1);
     
-    return arrayedResult.reduce((acc, charactersOfActor) => ({...acc, ...charactersOfActor}), {});
+    return arrayedActorsWithMultipleCharacters.reduce((acc, charactersOfActor) => ({...acc, ...charactersOfActor}), {});
 }
 
 async function moviesOfActorByName(actorName) {
