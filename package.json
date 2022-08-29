@@ -6,7 +6,8 @@
   "author": "Alon Kaduri <alonk@vi.co>",
   "license": "MIT",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "node src"
   },
   "devDependencies": {
     "jest": "^28.1.0"
