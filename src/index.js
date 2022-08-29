@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const express = require('express');
 const { API_KEY } = require('./constants');
 const { movies, actors } = require('../dataForQuestions');
+const { uniqueMovieCharactersOfActor } = require('./utils')
 
 const port = Number(process.env.PORT) || 3000;
 const app = express();
@@ -9,6 +10,7 @@ app.listen(port, () => console.log(`App listening on http://localhost:${port}`))
 
 app.get("/", (req, res) => res.send(sayHey("Marvel enthusiast")))
 app.get("/moviesPerActor", async (req, res) => res.send(await moviesPerActor()));
+app.get("/actorsWithMultipleCharacters", async (req, res) => res.send(await actorsWithMultipleCharacters()));
 
 async function moviesPerActor() {
     const arrayedResult = await Promise.all(actors.map(moviesOfActorByName));
@@ -16,11 +18,27 @@ async function moviesPerActor() {
     return arrayedResult.reduce((acc, moviesOfActor) => ({...acc, ...moviesOfActor}), {});
 }
 
+async function actorsWithMultipleCharacters() {
+    const arrayedResult = await Promise.all(actors.map(movieCharactersOfActorByName));
+    const arrayedUnique = arrayedResult.map(uniqueMovieCharactersOfActor);
+    const arrayedActorsWithMultipleCharacters = arrayedUnique.filter(movieCharactersOfActor => !!movieCharactersOfActor &&
+        Object.keys(Object.values(movieCharactersOfActor)[0]).length > 1);
+    
+    return arrayedActorsWithMultipleCharacters.reduce((acc, charactersOfActor) => ({...acc, ...charactersOfActor}), {});
+}
+
 async function moviesOfActorByName(actorName) {
     const actorId = await getActorId(actorName);
     const movieCharacters = await movieCharactersOfActorById(actorId)
     
     return {[actorName]: Object.keys(movieCharacters)};
+}
+
+async function movieCharactersOfActorByName(actorName) {
+    const actorId = await getActorId(actorName);
+    const movieCharacters =  await movieCharactersOfActorById(actorId);
+
+    return {[actorName]: movieCharacters};
 }
 
 async function getActorId(actorName) {
